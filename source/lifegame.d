@@ -1,5 +1,7 @@
 class LifeGame {
     import std.stdio;
+    import core.thread;
+    import core.time : dur;
 
     alias Cells = bool[][];
     private int H = 30, W = 30;
@@ -54,14 +56,14 @@ class LifeGame {
         write("\r");
         stdout.flush();
         sleep(100);
-        write("\033[2J");
+        write("\033[2J"); // clean
     }
 
     private void set_cell(int x, int y) {
         cells[y][x] = true;
     }
 
-    void set_random() {
+    private void set_random() {
         import std.random : Random, uniform, unpredictableSeed;
         immutable int N = H * W - H - W;
         auto rnd = Random(unpredictableSeed);
@@ -69,17 +71,15 @@ class LifeGame {
             set_cell(uniform(0, W, rnd), uniform(0, H, rnd));
     }
 
-    void sleep(immutable int msec) {
-        import core.thread;
-        import core.time : dur;
+    private void sleep(immutable int msec) {
         Thread.sleep(dur!"msecs"(msec));
     }
 
-    Cells update() {
+    private Cells update() {
         int[][] nums = calc_livecell_num();
         Cells a = new Cells(H, W);
         foreach (y; 0..H) foreach (x; 0..W) {
-            int num = nums[y][x];
+            immutable int num = nums[y][x];
             if (!cells[y][x] && num == 3)                   // birth
                 a[y][x] = true;
             else if (cells[y][x] && (num == 2 || num == 3)) // live
