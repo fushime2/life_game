@@ -2,7 +2,7 @@
 
 ## Usage
 
-    $ dub
+    $ dub run -b release
 
 or
 
