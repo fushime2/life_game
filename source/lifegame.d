@@ -91,4 +91,34 @@ class LifeGame {
         }
         return a;
     }
+
+    unittest {
+        immutable N = 3;
+        auto lg = new LifeGame(N, N);
+        assert(lg.H == N);
+        assert(lg.W == N);
+
+        lg.cells = new Cells(N, N);
+        assert(lg.calc_livecell_num() == [
+                [0,0,0],
+                [0,0,0],
+                [0,0,0]
+        ]);
+        
+        lg.set_cell(0, 0);
+        lg.set_cell(0, 1);
+        lg.set_cell(1, 0);
+        assert(lg.calc_livecell_num() == [
+                [2,2,1],
+                [2,3,1],
+                [1,1,0]
+        ]);
+
+        lg.cells = lg.update();
+        assert(lg.cells == [
+                [1,1,0],
+                [1,1,0],
+                [0,0,0]
+        ]);
+    }
 }
